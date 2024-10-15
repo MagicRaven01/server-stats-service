@@ -79,7 +79,8 @@ To keep the service running after a system reboot, follow these steps:
 To make the service accessible via `http://localhost:8080/stats` for users connected through a VPN, ensure that the correct network settings and routing are configured. You may also need to adjust firewall rules to allow access.
 
 ### Example
-![screenshot](screenshot.png)
+![screenshot](![image](https://github.com/user-attachments/assets/49e75eba-dcd5-44fc-aacd-509d37ed8068))
+
 
 ## Usage
 Access the server statistics on your web browser:
