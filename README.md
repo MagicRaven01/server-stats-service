@@ -1,6 +1,3 @@
-Here's a `README.md` template for your **Server Stats Service** project on GitHub:
-
-```markdown
 # Server Stats Service
 
 ## Overview
