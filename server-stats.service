@@ -1,0 +1,13 @@
+[Unit]
+Description=Server Stats Service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/server-stats
+WorkingDirectory=/home/GO
+Restart=always
+User=root
+Environment=PATH=/usr/bin:/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target
