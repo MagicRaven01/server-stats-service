@@ -25,7 +25,7 @@ To run this service, you'll need:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/server-stats-service.git
+   git clone https://github.com/magicraven01/server-stats-service.git
    cd server-stats-service
    ```
 
