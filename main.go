@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -35,25 +36,19 @@ func getSystemStats() (SystemStats, error) {
 		return SystemStats{}, err
 	}
 
-	netInterfaces, err := net.Interfaces()
-	if err != nil {
-		return SystemStats{}, err
-	}
-
 	hostInfo, err := host.Info()
 	if err != nil {
 		return SystemStats{}, err
 	}
 
 	stats := SystemStats{
-		CPUUsage:          cpuPercents[0],
-		MemoryUsage:       vmStat.Used,
-		MemoryTotal:       vmStat.Total,
-		MemoryPercent:     vmStat.UsedPercent,
-		NetworkInterfaces: netInterfaces,
-		Platform:          hostInfo.Platform,
-		PlatformVersion:   hostInfo.PlatformVersion,
-		Uptime:            hostInfo.Uptime / 3600,
+		CPUUsage:        cpuPercents[0],
+		MemoryUsage:     vmStat.Used,
+		MemoryTotal:     vmStat.Total,
+		MemoryPercent:   vmStat.UsedPercent,
+		Platform:        hostInfo.Platform,
+		PlatformVersion: hostInfo.PlatformVersion,
+		Uptime:          hostInfo.Uptime / 3600,
 	}
 
 	return stats, nil
@@ -79,8 +74,20 @@ func statsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func apiStatsHandler(w http.ResponseWriter, r *http.Request) {
+	stats, err := getSystemStats()
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error getting system stats: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(stats)
+}
+
 func main() {
 	http.HandleFunc("/stats", statsHandler)
-	log.Println("Starting server on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	http.HandleFunc("/api/stats", apiStatsHandler)
+	log.Println("Starting server on :7777")
+	log.Fatal(http.ListenAndServe(":7777", nil))
 }
