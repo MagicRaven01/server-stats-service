@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -11,19 +10,19 @@ import (
 	"github.com/shirou/gopsutil/v4/cpu"
 	"github.com/shirou/gopsutil/v4/host"
 	"github.com/shirou/gopsutil/v4/mem"
-	"github.com/shirou/gopsutil/v4/net"
 )
 
 type SystemStats struct {
-	CPUUsage          float64
-	MemoryUsage       uint64
-	MemoryTotal       uint64
-	MemoryPercent     float64
-	NetworkInterfaces []net.InterfaceStat
-	Platform          string
-	PlatformVersion   string
-	Uptime            uint64
+	CPUUsage        float64
+	MemoryUsage     uint64
+	MemoryTotal     uint64
+	MemoryPercent   float64
+	Platform        string
+	PlatformVersion string
+	Uptime          uint64
 }
+
+var tmpl = template.Must(template.ParseFiles("template.html"))
 
 func getSystemStats() (SystemStats, error) {
 	cpuPercents, err := cpu.Percent(time.Second, false)
@@ -57,37 +56,35 @@ func getSystemStats() (SystemStats, error) {
 func statsHandler(w http.ResponseWriter, r *http.Request) {
 	stats, err := getSystemStats()
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error getting system stats: %v", err), http.StatusInternalServerError)
+		log.Printf("Error getting stats: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
-	tmpl, err := template.ParseFiles("template.html")
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Error parsing template: %v", err), http.StatusInternalServerError)
-		return
-	}
-
-	err = tmpl.Execute(w, stats)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Error executing template: %v", err), http.StatusInternalServerError)
-		return
+	if err := tmpl.Execute(w, stats); err != nil {
+		log.Printf("Error executing template: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 }
 
 func apiStatsHandler(w http.ResponseWriter, r *http.Request) {
 	stats, err := getSystemStats()
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error getting system stats: %v", err), http.StatusInternalServerError)
+		log.Printf("Error getting stats: %v", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(stats)
+	if err := json.NewEncoder(w).Encode(stats); err != nil {
+		log.Printf("Error encoding JSON: %v", err)
+	}
 }
 
 func main() {
-	http.HandleFunc("/stats", statsHandler)
-	http.HandleFunc("/api/stats", apiStatsHandler)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/stats", statsHandler)
+	mux.HandleFunc("/api/stats", apiStatsHandler)
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+
 	log.Println("Starting server on :7777")
-	log.Fatal(http.ListenAndServe(":7777", nil))
+	log.Fatal(http.ListenAndServe(":7777", mux))
 }

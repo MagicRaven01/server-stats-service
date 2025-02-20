@@ -1,0 +1,101 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #0d0d0d; /* Тёмный фон */
+    font-family: 'Courier New', Courier, monospace; /* Моноширинный шрифт */
+    color: #00ffcc; /* Неоновый циан */
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(20, 20, 20, 0.9);
+    border: 2px solid #ff00ff; /* Неоновая розовая рамка */
+    box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffcc;
+    border-radius: 5px;
+}
+
+h1 {
+    text-align: center;
+    color: #ff00ff; /* Неоновый розовый */
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffcc;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.stat {
+    background: rgba(0, 255, 204, 0.1); /* Полупрозрачный циан */
+    padding: 15px;
+    border: 1px solid #00ffcc;
+    border-radius: 5px;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #00ffcc;
+    cursor: pointer; /* Для system-stat */
+}
+
+.stat:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #ff00ff, 0 0 25px #00ffcc;
+    background: rgba(0, 255, 204, 0.2);
+}
+
+.progress-bar {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #00ffcc;
+    border-radius: 5px;
+    height: 20px;
+    overflow: hidden;
+    margin: 10px 0;
+    box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.2);
+}
+
+.progress {
+    height: 100%;
+    transition: width 0.5s ease; /* Плавное обновление */
+    text-align: center;
+    line-height: 20px;
+    font-size: 0.9em;
+    color: #0d0d0d;
+    text-shadow: none;
+}
+
+.cpu-progress {
+    background: linear-gradient(90deg, #ff00ff, #00ffcc); /* Градиент для CPU */
+}
+
+.memory-progress {
+    background: linear-gradient(90deg, #00ffcc, #ff00ff); /* Градиент для Memory */
+}
+
+.system-stat {
+    position: relative;
+    overflow: hidden;
+}
+
+.system-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out;
+    padding-top: 10px;
+    color: #ff00ff;
+    text-shadow: 0 0 5px #ff00ff;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        padding: 15px;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
