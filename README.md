@@ -75,11 +75,6 @@ To keep the service running after a system reboot, follow these steps:
    sudo systemctl start server-stats
    ```
 
-### OpenVPN/Localhost Access
-To make the service accessible via `http://localhost:8080/stats` for users connected through a VPN, ensure that the correct network settings and routing are configured. You may also need to adjust firewall rules to allow access.
-
-### Example
-![screenshot](![image](https://github.com/user-attachments/assets/49e75eba-dcd5-44fc-aacd-509d37ed8068))
 
 
 ## Usage
@@ -97,5 +92,3 @@ Contributions are welcome! Please create a new issue or submit a pull request.
 ## Acknowledgments
 - [gopsutil](https://github.com/shirou/gopsutil) for system info collection.
 ```
-
-Feel free to update it with your specific details, such as repository links and paths.
